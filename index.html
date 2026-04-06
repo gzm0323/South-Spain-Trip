@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>安达卢西亚 + 西班牙中部 · 15天自驾</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --red:       #C0392B;
+      --terra:     #D4622A;
+      --gold:      #E8A838;
+      --cream:     #F9F1E7;
+      --warm-gray: #EDE3D6;
+      --dark:      #2C3E50;
+      --mid:       #5D6D7E;
+      --light:     #BDC3C7;
+      --white:     #FFFFFF;
+      --shadow:    0 4px 20px rgba(44,62,80,.12);
+      --radius:    12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(44,62,80,.92);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 56px;
+    }
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,.78);
+      text-decoration: none;
+      font-size: .85rem;
+      letter-spacing: .03em;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      background:
+        linear-gradient(160deg, rgba(44,62,80,.72) 0%, rgba(192,57,43,.55) 60%, rgba(232,168,56,.4) 100%),
+        url('https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1800&q=80') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-size: .78rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 4rem);
+      color: #fff;
+      line-height: 1.18;
+      margin-bottom: 10px;
+    }
+    .hero-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: rgba(255,255,255,.82);
+      margin-bottom: 36px;
+      font-style: italic;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    .stat {
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      min-width: 110px;
+      backdrop-filter: blur(4px);
+    }
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      font-family: 'Playfair Display', serif;
+    }
+    .stat-label {
+      font-size: .75rem;
+      color: rgba(255,255,255,.7);
+      margin-top: 4px;
+      letter-spacing: .06em;
+    }
+    .hero-dates {
+      color: rgba(255,255,255,.85);
+      font-size: .9rem;
+      background: rgba(232,168,56,.28);
+      border: 1px solid rgba(232,168,56,.45);
+      border-radius: 24px;
+      padding: 8px 20px;
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,.55);
+      font-size: .75rem;
+      letter-spacing: .1em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .scroll-arrow {
+      width: 20px; height: 20px;
+      border-right: 2px solid rgba(255,255,255,.45);
+      border-bottom: 2px solid rgba(255,255,255,.45);
+      transform: rotate(45deg);
+      animation: bounce 1.6s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50%       { transform: rotate(45deg) translateY(5px); }
+    }
+
+    /* ─── SECTION WRAPPERS ─── */
+    section { padding: 72px 24px; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-tag {
+      display: inline-block;
+      background: var(--terra);
+      color: #fff;
+      font-size: .7rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .section-desc {
+      color: var(--mid);
+      font-size: .9rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ─── MAP SECTION ─── */
+    #map-section {
+      background: var(--dark);
+      padding: 72px 0 0;
+    }
+    #map-section .section-header {
+      padding: 0 24px;
+    }
+    #map-section .section-tag { background: var(--gold); color: var(--dark); }
+    #map-section .section-title { color: #fff; }
+    #map-section .section-desc { color: rgba(255,255,255,.6); }
+
+    #map-container {
+      position: relative;
+      margin-top: 36px;
+    }
+    #map {
+      width: 100%;
+      height: 520px;
+    }
+
+    /* City info panel */
+    #city-panel {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 260px;
+      background: rgba(255,255,255,.97);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform: translateX(290px);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+      z-index: 800;
+    }
+    #city-panel.active { transform: translateX(0); }
+    .panel-header {
+      background: var(--terra);
+      color: #fff;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .panel-city-cn { font-size: 1.2rem; font-weight: 700; }
+    .panel-city-es { font-size: .75rem; opacity: .85; font-style: italic; }
+    .panel-close {
+      background: none; border: none; color: #fff; cursor: pointer;
+      font-size: 1.2rem; line-height: 1; padding: 0 2px;
+      opacity: .8;
+    }
+    .panel-close:hover { opacity: 1; }
+    .panel-body { padding: 14px 16px; }
+    .panel-days {
+      font-size: .75rem;
+      color: var(--terra);
+      font-weight: 700;
+      letter-spacing: .05em;
+      margin-bottom: 8px;
+    }
+    .panel-activities { list-style: none; }
+    .panel-activities li {
+      font-size: .82rem;
+      color: var(--dark);
+      padding: 4px 0;
+      border-bottom: 1px solid var(--warm-gray);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-activities li:last-child { border-bottom: none; }
+    .panel-activities li::before {
+      content: '›';
+      color: var(--terra);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .panel-nights {
+      margin-top: 12px;
+      font-size: .75rem;
+      color: var(--mid);
+      background: var(--warm-gray);
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+
+    /* ─── TIMELINE SECTION ─── */
+    #timeline-section {
+      background: var(--cream);
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 36px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--terra), var(--gold));
+      border-radius: 2px;
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .tl-dot {
+      position: absolute;
+      left: -30px;
+      top: 18px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--warm-gray);
+      border: 2px solid var(--terra);
+      transition: all .25s;
+      z-index: 1;
+    }
+    .tl-item.active .tl-dot,
+    .tl-item:hover .tl-dot {
+      background: var(--terra);
+      transform: scale(1.3);
+    }
+    .tl-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border-left: 4px solid var(--warm-gray);
+      transition: border-color .25s, box-shadow .25s;
+    }
+    /* when card has a drive banner, the header no longer needs top rounding */
+    .tl-card .tl-drive + .tl-card-header {
+      border-radius: 0;
+    }
+    .tl-item.active .tl-card,
+    .tl-item:hover .tl-card {
+      border-left-color: var(--terra);
+      box-shadow: 0 6px 28px rgba(212,98,42,.18);
+    }
+    .tl-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+    }
+    .tl-day-badge {
+      background: var(--terra);
+      color: #fff;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tl-city-info { flex: 1; min-width: 0; }
+    .tl-city-cn {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .tl-city-es {
+      font-size: .78rem;
+      color: var(--mid);
+      font-style: italic;
+    }
+    .tl-drive {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: linear-gradient(90deg, #2C3E50 0%, #3d5166 100%);
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      padding: 9px 20px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .tl-drive .drive-icon {
+      font-size: 1rem;
+    }
+    .tl-drive .drive-time {
+      color: var(--gold);
+      font-size: .95rem;
+      font-weight: 700;
+    }
+    .tl-chevron {
+      color: var(--light);
+      font-size: 1.1rem;
+      transition: transform .3s;
+      flex-shrink: 0;
+    }
+    .tl-item.active .tl-chevron { transform: rotate(180deg); color: var(--terra); }
+
+    .tl-card-body {
+      display: none;
+      padding: 0 20px 18px;
+      border-top: 1px solid var(--warm-gray);
+    }
+    .tl-item.active .tl-card-body { display: block; }
+
+    .tl-activities {
+      list-style: none;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .tl-activities li {
+      font-size: .84rem;
+      color: var(--dark);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .tl-activities li .bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--terra);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+    .tl-nights-badge {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: .74rem;
+      color: var(--mid);
+      background: var(--warm-gray);
+      border-radius: 6px;
+      padding: 5px 12px;
+    }
+
+    /* sub-day label */
+    .tl-subday {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--terra);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-top: 12px;
+      margin-bottom: 2px;
+    }
+
+    /* ─── CITY CARDS ─── */
+    #cities-section {
+      background: var(--dark);
+    }
+    #cities-section .section-tag { background: var(--gold); color: var(--dark); }
+    #cities-section .section-title { color: #fff; }
+    #cities-section .section-desc { color: rgba(255,255,255,.6); }
+
+    .cities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .city-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: background .25s, transform .25s, box-shadow .25s;
+      cursor: default;
+    }
+    .city-card:hover {
+      background: rgba(255,255,255,.11);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.3);
+    }
+    .city-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .city-card-cn {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .city-card-es {
+      font-size: .78rem;
+      color: var(--gold);
+      font-style: italic;
+      margin-bottom: 14px;
+    }
+    .city-highlights {
+      list-style: none;
+      margin-bottom: 14px;
+    }
+    .city-highlights li {
+      font-size: .8rem;
+      color: rgba(255,255,255,.72);
+      padding: 3px 0;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .city-highlights li::before {
+      content: '✦';
+      color: var(--gold);
+      font-size: .6rem;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .city-food {
+      background: rgba(232,168,56,.15);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      font-size: .78rem;
+      color: rgba(255,255,255,.75);
+    }
+    .city-food strong {
+      color: var(--gold);
+      font-size: .7rem;
+      letter-spacing: .06em;
+      display: block;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #1a252f;
+      color: rgba(255,255,255,.45);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: .78rem;
+    }
+    footer span { color: var(--gold); }
+
+    /* ─── LEAFLET OVERRIDES ─── */
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
+    }
+    .leaflet-popup-tip { display: none; }
+
+    /* ─── CUSTOM MARKERS ─── */
+    .map-marker {
+      width: 32px;
+      height: 32px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    .map-marker span {
+      transform: rotate(45deg);
+      font-size: .6rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .map-marker.active { transform: rotate(-45deg) scale(1.3); }
+
+    /* ─── ANIMATIONS ─── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links { gap: 14px; }
+      .hero-stats { gap: 16px; }
+      #map { height: 340px; }
+      #city-panel { width: 220px; }
+      .timeline { padding-left: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Andalucía · 15天自驾</div>
+  <ul class="nav-links">
+    <li><a href="#map-section">地图</a></li>
+    <li><a href="#timeline-section">行程</a></li>
+    <li><a href="#cities-section">城市</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">Spain Self-Drive · 自驾路线</p>
+  <h1 class="hero-title">安达卢西亚<br/>+ 西班牙中部</h1>
+  <p class="hero-subtitle">15天自驾深度游</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-value">15</div>
+      <div class="stat-label">天</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">12</div>
+      <div class="stat-label">座城市</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">~1700</div>
+      <div class="stat-label">公里</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">2</div>
+      <div class="stat-label">大洲尽览</div>
+    </div>
+  </div>
+  <div class="hero-dates">📅 &nbsp;2026年4月25日 — 5月9日</div>
+  <div class="scroll-hint">
+    <span>向下探索</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- MAP SECTION -->
+<section id="map-section">
+  <div class="section-header fade-in">
+    <span class="section-tag">Interactive Map</span>
+    <h2 class="section-title">完整自驾路线</h2>
+    <p class="section-desc">点击地图上的城市标记，查看当地亮点与行程安排</p>
+  </div>
+  <div id="map-container">
+    <div id="map"></div>
+    <div id="city-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-city-cn" id="panel-cn"></div>
+          <div class="panel-city-es" id="panel-es"></div>
+        </div>
+        <button class="panel-close" id="panel-close">✕</button>
+      </div>
+      <div class="panel-body">
+        <div class="panel-days" id="panel-days"></div>
+        <ul class="panel-activities" id="panel-activities"></ul>
+        <div class="panel-nights" id="panel-nights"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE SECTION -->
+<section id="timeline-section">
+  <div class="section-header fade-in">
+    <span class="section-tag">Day by Day</span>
+    <h2 class="section-title">逐日行程</h2>
+    <p class="section-desc">点击每一天，展开详细安排；与地图联动，双向互动</p>
+  </div>
+  <div class="timeline" id="timeline"></div>
+</section>
+
+<!-- CITY CARDS SECTION -->
+<section id="cities-section">
+  <div class="section-header fade-in">
+    <span class="section-tag">City Guide</span>
+    <h2 class="section-title">城市精华指南</h2>
+    <p class="section-desc">每座城市的必游亮点与美食推荐</p>
+  </div>
+  <div class="cities-grid" id="cities-grid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>✈️ &nbsp;安达卢西亚 + 西班牙中部 · 15天自驾攻略 &nbsp;·&nbsp; <span>4.25 – 5.9, 2026</span></p>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const CITIES = [
+  {
+    id: 'seville',
+    cn: '塞维利亚', es: 'Sevilla',
+    lat: 37.389, lng: -5.984,
+    icon: '🏛️',
+    days: 'Day 1–3',
+    nights: '住宿 2 晚',
+    drive: null,
+    highlights: ['塞维利亚大教堂', '吉拉尔达塔', '塞维利亚王宫（皇家城堡）', '四月节（Feria de Abril）'],
+    activities: ['抵达 + 办理入住', '塔帕斯小吃 + 河边散步', '四月节活动', '塞维利亚大教堂 + 吉拉尔达塔', '塞维利亚王宫', '弗拉门戈表演'],
+    food: '塔帕斯、Pescaíto frito（炸海鲜），配 Rebujito（雪利+柠檬苏打）',
+    color: '#C0392B'
+  },
+  {
+    id: 'ronda',
+    cn: '龙达', es: 'Ronda',
+    lat: 36.746, lng: -5.162,
+    icon: '🌉',
+    days: 'Day 3–4',
+    nights: '住宿 1 晚',
+    drive: '约 2.5 小时',
+    highlights: ['龙达新桥（Puente Nuevo）', '峡谷步道', '沿途观景台', '西班牙最古老的斗牛场'],
+    activities: ['沿途停靠观景台', '龙达新桥', '峡谷步道漫步', '老城区探索'],
+    food: 'Rabo de toro（牛尾炖肉）、当地红酒',
+    color: '#8E44AD'
+  },
+  {
+    id: 'olvera',
+    cn: '奥尔韦拉 & 阿尔科斯', es: 'Olvera & Arcos de la Frontera',
+    lat: 36.748, lng: -5.802,
+    icon: '🏘️',
+    days: 'Day 4',
+    nights: '住宿 1 晚（阿尔科斯）',
+    drive: '约 2.5 小时（景观慢路）',
+    highlights: ['奥尔韦拉白色村庄', '阿尔科斯悬崖城镇', '安达卢西亚白村群（Pueblos Blancos）'],
+    activities: ['奥尔韦拉停留 1–2 小时', '白色村庄漫步', '下午抵达阿尔科斯', '山顶观景台'],
+    food: '白村特色小吃、橄榄油烹饪',
+    color: '#27AE60'
+  },
+  {
+    id: 'cadiz',
+    cn: '加的斯', es: 'Cádiz',
+    lat: 36.530, lng: -6.299,
+    icon: '🌊',
+    days: 'Day 5–6',
+    nights: '住宿 2 晚',
+    drive: '约 1.5 小时',
+    highlights: ['欧洲最古老的城市之一', '金色海滩', '赫雷斯酒庄参观', '桑卢卡尔海鲜午餐'],
+    activities: ['赫雷斯酒庄参观（上午）', '桑卢卡尔海鲜午餐', '抵达加的斯', '海滩', '老城区闲逛', '美食主题日'],
+    food: '桑卢卡尔 Manzanilla 雪利酒 + 对虾，加的斯炸鱼（Freidurías）',
+    color: '#2980B9'
+  },
+  {
+    id: 'tarifa',
+    cn: '塔里法', es: 'Tarifa',
+    lat: 36.014, lng: -5.605,
+    icon: '🌍',
+    days: 'Day 7',
+    nights: '途经',
+    drive: '约 1 小时 45 分',
+    highlights: ['欧洲大陆最南端', '大西洋与地中海交汇', '遥望摩洛哥（仅14公里）', '塔里法角', '兰斯海滩'],
+    activities: ['塔里法角（最标志性地点）', '海峡观景台（日落最佳）', '兰斯海滩漫步', '两海交汇体验', '风筝冲浪观赏'],
+    food: '新鲜海鲜、摩洛哥风味融合料理',
+    color: '#16A085'
+  },
+  {
+    id: 'malaga',
+    cn: '马拉加', es: 'Málaga',
+    lat: 36.721, lng: -4.421,
+    icon: '🎨',
+    days: 'Day 8–9',
+    nights: '住宿 2 晚',
+    drive: '约 2.5 小时',
+    highlights: ['阿尔卡萨瓦城堡', '毕加索博物馆', '地中海海滩', '美食街区 Soho'],
+    activities: ['抵达 + 休息（Day 8）', '马拉加阿尔卡萨瓦城堡（Day 9）', '毕加索博物馆', '海滩休闲'],
+    food: '炸沙丁鱼（Espeto de sardinas）、甜酒（Málaga Dulce）',
+    color: '#E67E22'
+  },
+  {
+    id: 'granada',
+    cn: '格拉纳达', es: 'Granada',
+    lat: 37.177, lng: -3.598,
+    icon: '🕌',
+    days: 'Day 10',
+    nights: '途经（住科尔多瓦）',
+    drive: '约 1 小时 45 分',
+    highlights: ['阿尔罕布拉宫（需提前订票）', '阿尔拜辛摩尔人老区', '萨克罗蒙特日落观景台', '弗拉门戈洞穴表演'],
+    activities: ['阿尔拜辛区漫步', '萨克罗蒙特日落观景台', '前往科尔多瓦'],
+    food: '塔帕斯免费（Granada传统）、热巧克力配油条',
+    color: '#8E44AD'
+  },
+  {
+    id: 'cordoba',
+    cn: '科尔多瓦', es: 'Córdoba',
+    lat: 37.888, lng: -4.779,
+    icon: '🕍',
+    days: 'Day 10–11',
+    nights: '住宿 2 晚',
+    drive: '约 2 小时 15 分',
+    highlights: ['科尔多瓦清真寺-大教堂（Mezquita-Catedral）', '花巷（Calleja de las Flores）', '罗马桥', '犹太区'],
+    activities: ['科尔多瓦清真寺-大教堂', '花巷漫步', '罗马桥 + 卡拉奥拉塔', '犹太区探索'],
+    food: 'Salmorejo（冷汤）、Flamenquín（炸猪肉卷）',
+    color: '#C0392B'
+  },
+  {
+    id: 'toledo',
+    cn: '托莱多', es: 'Toledo',
+    lat: 39.857, lng: -4.024,
+    icon: '⚔️',
+    days: 'Day 12–13',
+    nights: '住宿 1 晚',
+    drive: '约 3.5 小时',
+    highlights: ['托莱多大教堂', '阿尔卡萨城堡', '老城区（UNESCO遗址）', '俯瞰全城观景台'],
+    activities: ['抵达 + 观景台（Day 12）', '托莱多大教堂（Day 13）', '老城区闲逛', '前往马德里'],
+    food: '马萨潘（Mazapán）杏仁糖、卡斯蒂利亚烤全猪',
+    color: '#D4AC0D'
+  },
+  {
+    id: 'madrid',
+    cn: '马德里', es: 'Madrid',
+    lat: 40.416, lng: -3.703,
+    icon: '🏙️',
+    days: 'Day 13–15',
+    nights: '住宿 2 晚',
+    drive: '约 1 小时',
+    highlights: ['普拉多博物馆', '索菲亚王后国家艺术中心', '太阳门广场', '马约尔广场'],
+    activities: ['城市漫步', '普拉多博物馆 / 索菲亚王后博物馆', '太阳门 + 马约尔广场', '机场还车，返程'],
+    food: '马德里炖肉（Cocido madrileño）、Bocadillo de Calamares（炸鱿鱼三明治）',
+    color: '#2C3E50'
+  }
+];
+
+const TIMELINE_DAYS = [
+  {
+    dayLabel: 'Day 1',
+    cityId: 'seville',
+    title: '抵达塞维利亚',
+    subtitle: 'Llegada a Sevilla',
+    drive: null,
+    subdays: [
+      { label: 'Day 1', items: ['抵达塞维利亚，办理入住', '晚上：塔帕斯小吃 + 河边散步', '四月节（Feria de Abril）活动'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 2',
+    cityId: 'seville',
+    title: '塞维利亚精华游',
+    subtitle: 'Sevilla — Monumentos',
+    drive: null,
+    subdays: [
+      { label: 'Day 2', items: ['塞维利亚大教堂 + 吉拉尔达塔', '塞维利亚王宫（皇家城堡）', '弗拉门戈表演', '四月节活动'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 3',
+    cityId: 'ronda',
+    title: '塞维利亚 → 龙达',
+    subtitle: 'Sevilla → Ronda',
+    drive: '约 2.5 小时',
+    subdays: [
+      { label: '行程', items: ['租车，开往龙达', '沿途停靠观景台', '龙达新桥', '峡谷步道漫步'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 4',
+    cityId: 'olvera',
+    title: '龙达 → 白色村庄 → 阿尔科斯',
+    subtitle: 'Ronda → Olvera → Arcos de la Frontera',
+    drive: '约 2.5 小时（景观慢路）',
+    subdays: [
+      { label: '行程', items: ['奥尔韦拉白色村庄（停留 1–2 小时）', '安达卢西亚白村群漫步', '下午抵达阿尔科斯-德拉弗龙特拉', '山顶观景台日落'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 5',
+    cityId: 'cadiz',
+    title: '阿尔科斯 → 赫雷斯 → 桑卢卡尔 → 加的斯',
+    subtitle: 'Arcos → Jerez → Sanlúcar → Cádiz',
+    drive: '约 1.5 小时',
+    subdays: [
+      { label: '上午', items: ['赫雷斯酒庄参观（雪利酒产地）'] },
+      { label: '午餐', items: ['桑卢卡尔-德巴拉梅达（海鲜午餐！）'] },
+      { label: '下午', items: ['抵达加的斯，入住酒店'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 6',
+    cityId: 'cadiz',
+    title: '加的斯休闲日',
+    subtitle: 'Cádiz — Día libre',
+    drive: null,
+    subdays: [
+      { label: '全天', items: ['加的斯金色海滩休闲', '老城区漫步 & 博物馆', '美食主题日：品尝当地特色'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 7',
+    cityId: 'tarifa',
+    title: '加的斯 → 塔里法',
+    subtitle: 'Cádiz → Tarifa',
+    drive: '约 1 小时 45 分',
+    subdays: [
+      { label: '亮点', items: ['欧洲大陆最南端', '大西洋与地中海交汇处', '天气晴朗时可望见摩洛哥（仅 14 公里）', '塔里法角 — 最标志性地点', '海峡观景台（日落绝佳）', '兰斯海滩 — 风筝冲浪圣地'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 8',
+    cityId: 'malaga',
+    title: '塔里法 → 马拉加',
+    subtitle: 'Tarifa → Málaga',
+    drive: '约 2.5 小时',
+    subdays: [
+      { label: 'Day 8', items: ['抵达马拉加', '休息 + 海滨漫步'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 9',
+    cityId: 'malaga',
+    title: '马拉加精华游',
+    subtitle: 'Málaga — Monumentos',
+    drive: null,
+    subdays: [
+      { label: 'Day 9', items: ['马拉加阿尔卡萨瓦城堡', '毕加索博物馆（Pablo Picasso 故乡）', '地中海海滩休闲'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 10',
+    cityId: 'granada',
+    title: '马拉加 → 格拉纳达 → 科尔多瓦',
+    subtitle: 'Málaga → Granada → Córdoba',
+    drive: '格拉纳达 1h45 + 科尔多瓦 2h15',
+    subdays: [
+      { label: '格拉纳达', items: ['阿尔拜辛摩尔人老区漫步', '萨克罗蒙特日落观景台'] },
+      { label: '晚间', items: ['驾车至科尔多瓦（约 2 小时 15 分）', '抵达科尔多瓦入住'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 11',
+    cityId: 'cordoba',
+    title: '科尔多瓦',
+    subtitle: 'Córdoba',
+    drive: null,
+    subdays: [
+      { label: '全天', items: ['科尔多瓦清真寺-大教堂（Mezquita-Catedral）', '花巷（Calleja de las Flores）', '罗马桥 & 卡拉奥拉塔', '犹太区漫步'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 12',
+    cityId: 'toledo',
+    title: '科尔多瓦 → 托莱多',
+    subtitle: 'Córdoba → Toledo',
+    drive: '约 3.5 小时',
+    subdays: [
+      { label: '行程', items: ['驾车前往托莱多', '抵达 + 俯瞰全城观景台', '老城区初探'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 13',
+    cityId: 'madrid',
+    title: '托莱多 → 马德里',
+    subtitle: 'Toledo → Madrid',
+    drive: '约 1 小时',
+    subdays: [
+      { label: '上午 / 托莱多', items: ['托莱多大教堂（哥特式经典）', '老城区 & 阿尔卡萨城堡'] },
+      { label: '下午 / 马德里', items: ['抵达马德里，入住酒店', '太阳门广场初探'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 14',
+    cityId: 'madrid',
+    title: '马德里漫游',
+    subtitle: 'Madrid — Museos y Ciudad',
+    drive: null,
+    subdays: [
+      { label: '全天', items: ['普拉多博物馆（Goya、Velázquez）', '索菲亚王后国家艺术中心（Picasso《格尔尼卡》）', '太阳门 + 马约尔广场', '城市漫步 & 购物'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 15',
+    cityId: 'madrid',
+    title: '返程',
+    subtitle: 'Regreso',
+    drive: null,
+    subdays: [
+      { label: '离程', items: ['最后一顿马德里早餐', '机场还车', '返程离开西班牙'] }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────
+// MAP INIT
+// ─────────────────────────────────────────────
+const map = L.map('map', {
+  zoomControl: true
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  maxZoom: 19
+}).addTo(map);
+
+// Draw route polyline
+const routeCoords = CITIES.map(c => [c.lat, c.lng]);
+const routeLine = L.polyline(routeCoords, {
+  color: '#D4622A',
+  weight: 3,
+  opacity: 0.65,
+  dashArray: '6 8'
+}).addTo(map);
+
+// Fit map to the full route with padding
+map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
+
+// Markers
+const markers = {};
+let activeMarker = null;
+
+CITIES.forEach((city, idx) => {
+  const el = document.createElement('div');
+  el.className = 'map-marker';
+  el.style.background = city.color;
+  el.innerHTML = `<span>${idx + 1}</span>`;
+
+  const icon = L.divIcon({
+    className: '',
+    html: el.outerHTML,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -36]
+  });
+
+  const marker = L.marker([city.lat, city.lng], { icon })
+    .addTo(map)
+    .on('click', () => openCityPanel(city));
+
+  markers[city.id] = marker;
+});
+
+// ─────────────────────────────────────────────
+// CITY PANEL
+// ─────────────────────────────────────────────
+const cityPanel = document.getElementById('city-panel');
+document.getElementById('panel-close').addEventListener('click', () => {
+  cityPanel.classList.remove('active');
+});
+
+function openCityPanel(city) {
+  document.getElementById('panel-cn').textContent = city.cn;
+  document.getElementById('panel-es').textContent = city.es;
+  document.getElementById('panel-days').textContent = city.days;
+  document.getElementById('panel-nights').textContent = '🏨 ' + city.nights;
+
+  const list = document.getElementById('panel-activities');
+  list.innerHTML = city.activities.map(a => `<li>${a}</li>`).join('');
+
+  cityPanel.classList.add('active');
+  map.flyTo([city.lat, city.lng], 10, { duration: 1.2 });
+
+  // Scroll to and open matching timeline card
+  scrollToTimelineCity(city.id);
+}
+
+// ─────────────────────────────────────────────
+// TIMELINE BUILD
+// ─────────────────────────────────────────────
+const timelineEl = document.getElementById('timeline');
+
+TIMELINE_DAYS.forEach((day, idx) => {
+  const item = document.createElement('div');
+  item.className = 'tl-item';
+  item.dataset.cityId = day.cityId;
+  item.dataset.idx = idx;
+
+  const city = CITIES.find(c => c.id === day.cityId);
+  const driveHtml = day.drive
+    ? `<div class="tl-drive"><span class="drive-icon">🚗</span><span>驾车</span><span class="drive-time">${day.drive}</span></div>`
+    : '';
+
+  const bodyHtml = day.subdays.map(sd => `
+    <div class="tl-subday">${sd.label}</div>
+    <ul class="tl-activities">
+      ${sd.items.map(it => `<li><span class="bullet"></span><span>${it}</span></li>`).join('')}
+    </ul>
+  `).join('');
+
+  item.innerHTML = `
+    <div class="tl-dot"></div>
+    <div class="tl-card">
+      ${driveHtml}
+      <div class="tl-card-header">
+        <div class="tl-day-badge">${day.dayLabel}</div>
+        <div class="tl-city-info">
+          <div class="tl-city-cn">${day.title}</div>
+          <div class="tl-city-es">${day.subtitle}</div>
+        </div>
+        <div class="tl-chevron">▾</div>
+      </div>
+      <div class="tl-card-body">
+        ${bodyHtml}
+        <div class="tl-nights-badge">🏨 ${city ? city.nights : ''}</div>
+      </div>
+    </div>
+  `;
+
+  item.querySelector('.tl-card-header').addEventListener('click', () => {
+    const wasActive = item.classList.contains('active');
+    // Close all
+    document.querySelectorAll('.tl-item.active').forEach(el => el.classList.remove('active'));
+    if (!wasActive) {
+      item.classList.add('active');
+      // Fly map to city
+      if (city) map.flyTo([city.lat, city.lng], 9, { duration: 1 });
+    }
+  });
+
+  timelineEl.appendChild(item);
+});
+
+function scrollToTimelineCity(cityId) {
+  const items = document.querySelectorAll('.tl-item');
+  const firstMatch = Array.from(items).find(el => el.dataset.cityId === cityId);
+  if (!firstMatch) return;
+
+  document.querySelectorAll('.tl-item.active').forEach(el => el.classList.remove('active'));
+  firstMatch.classList.add('active');
+
+  firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ─────────────────────────────────────────────
+// CITY CARDS BUILD
+// ─────────────────────────────────────────────
+const citiesGrid = document.getElementById('cities-grid');
+
+CITIES.forEach(city => {
+  const card = document.createElement('div');
+  card.className = 'city-card';
+  card.innerHTML = `
+    <span class="city-icon">${city.icon}</span>
+    <div class="city-card-cn">${city.cn}</div>
+    <div class="city-card-es">${city.es}</div>
+    <ul class="city-highlights">
+      ${city.highlights.map(h => `<li>${h}</li>`).join('')}
+    </ul>
+    <div class="city-food">
+      <strong>美食推荐</strong>
+      ${city.food}
+    </div>
+  `;
+
+  card.addEventListener('click', () => {
+    map.flyTo([city.lat, city.lng], 10, { duration: 1.2 });
+    window.scrollTo({ top: document.getElementById('map-section').offsetTop - 60, behavior: 'smooth' });
+    setTimeout(() => openCityPanel(city), 600);
+  });
+
+  citiesGrid.appendChild(card);
+});
+
+// ─────────────────────────────────────────────
+// FADE-IN ON SCROLL
+// ─────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Also animate timeline items
+const tlObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateX(0)';
+      }, 60);
+      tlObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.05 });
+
+document.querySelectorAll('.tl-item').forEach((el, idx) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateX(20px)';
+  el.style.transition = `opacity .5s ease ${idx * 0.04}s, transform .5s ease ${idx * 0.04}s`;
+  tlObserver.observe(el);
+});
+
+// Open first timeline item by default
+document.querySelector('.tl-item')?.classList.add('active');
+</script>
+</body>
+</html>
