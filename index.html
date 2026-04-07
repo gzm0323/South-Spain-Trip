@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>安达卢西亚 + 西班牙中部 · 15天自驾</title>
+  <title>安达卢西亚 + 西班牙中部 · 16天自驾（4.27–5.12）</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
@@ -352,8 +352,17 @@
       font-size: .72rem;
       font-weight: 700;
       letter-spacing: .04em;
-      white-space: nowrap;
       flex-shrink: 0;
+      line-height: 1.35;
+      text-align: center;
+    }
+    .tl-day-badge .tl-date-line {
+      display: block;
+      font-weight: 500;
+      opacity: .92;
+      font-size: .68rem;
+      margin-top: 2px;
+      letter-spacing: .02em;
     }
     .tl-city-info { flex: 1; min-width: 0; }
     .tl-city-cn {
@@ -591,7 +600,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-brand">Andalucía · 15天自驾</div>
+  <div class="nav-brand">Andalucía · 16天自驾</div>
   <ul class="nav-links">
     <li><a href="#map-section">地图</a></li>
     <li><a href="#timeline-section">行程</a></li>
@@ -603,18 +612,18 @@
 <section id="hero">
   <p class="hero-eyebrow">Spain Self-Drive · 自驾路线</p>
   <h1 class="hero-title">安达卢西亚<br/>+ 西班牙中部</h1>
-  <p class="hero-subtitle">15天自驾深度游</p>
+  <p class="hero-subtitle">马德里机场取还车 · 深度自驾</p>
   <div class="hero-stats">
     <div class="stat">
-      <div class="stat-value">15</div>
+      <div class="stat-value">16</div>
       <div class="stat-label">天</div>
     </div>
     <div class="stat">
       <div class="stat-value">12</div>
-      <div class="stat-label">座城市</div>
+      <div class="stat-label">座城镇</div>
     </div>
     <div class="stat">
-      <div class="stat-value">~1700</div>
+      <div class="stat-value">~2100</div>
       <div class="stat-label">公里</div>
     </div>
     <div class="stat">
@@ -622,7 +631,7 @@
       <div class="stat-label">大洲尽览</div>
     </div>
   </div>
-  <div class="hero-dates">📅 &nbsp;2026年4月25日 — 5月9日</div>
+  <div class="hero-dates">📅 &nbsp;2026年4月27日 — 5月12日 · 5.11 晚间机场还车</div>
   <div class="scroll-hint">
     <span>向下探索</span>
     <div class="scroll-arrow"></div>
@@ -677,7 +686,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <p>✈️ &nbsp;安达卢西亚 + 西班牙中部 · 15天自驾攻略 &nbsp;·&nbsp; <span>4.25 – 5.9, 2026</span></p>
+  <p>✈️ &nbsp;安达卢西亚 + 西班牙中部 · 自驾路书 &nbsp;·&nbsp; <span>4.27 – 5.12, 2026</span></p>
 </footer>
 
 <script>
@@ -686,42 +695,81 @@
 // ─────────────────────────────────────────────
 const CITIES = [
   {
+    id: 'madrid',
+    cn: '马德里', es: 'Madrid',
+    lat: 40.416, lng: -3.703,
+    icon: '🏙️',
+    days: 'Day 1–2 · 15–16',
+    nights: '机场取车 · 5.11 机场还车 / 机场酒店',
+    drive: null,
+    highlights: ['普拉多博物馆', '马德里王宫', '马约尔广场', '太阳门广场', '丽池公园', '伯纳乌 / Las Ventas（可选）'],
+    activities: ['4.27 抵达、取车、休整', '4.28 市区经典一日游', '5.11 长途抵达后可选球赛 / 斗牛季', '5.12 早班机离境'],
+    food: '马德里炖肉（Cocido madrileño）、炸鱿鱼三明治（Bocadillo de Calamares）',
+    color: '#2C3E50'
+  },
+  {
+    id: 'toledo',
+    cn: '托莱多', es: 'Toledo',
+    lat: 39.857, lng: -4.024,
+    icon: '⚔️',
+    days: 'Day 3',
+    nights: '灵活（托莱多或直接去科尔多瓦）',
+    drive: '约 70 km / 1h',
+    highlights: ['托莱多观景台', '托莱多大教堂', '三文化老城', '圣马丁桥'],
+    activities: ['马德里出发自驾抵达', '古城与教堂深度游览'],
+    food: '马萨潘（Mazapán）、烤乳猪',
+    color: '#D4AC0D'
+  },
+  {
+    id: 'cordoba',
+    cn: '科尔多瓦', es: 'Córdoba',
+    lat: 37.888, lng: -4.779,
+    icon: '🕍',
+    days: 'Day 4 · Day 14–15',
+    nights: '两次入住（4.30 起 + 5.10 晚）',
+    drive: '塞维利亚→约 140 km',
+    highlights: ['清真寺-大教堂（Mezquita）', '古罗马桥', '百花巷', '犹太区', '基督教国王城堡（可选）'],
+    activities: ['4.30 全日经典线', '5.10 晚二次入住', '5.11 上午补逛后北上马德里'],
+    food: 'Salmorejo、Flamenquín、庭院塔帕斯',
+    color: '#C0392B'
+  },
+  {
     id: 'seville',
     cn: '塞维利亚', es: 'Sevilla',
     lat: 37.389, lng: -5.984,
     icon: '🏛️',
-    days: 'Day 1–3',
+    days: 'Day 5–6',
     nights: '住宿 2 晚',
-    drive: null,
-    highlights: ['塞维利亚大教堂', '吉拉尔达塔', '塞维利亚王宫（皇家城堡）', '四月节（Feria de Abril）'],
-    activities: ['抵达 + 办理入住', '塔帕斯小吃 + 河边散步', '四月节活动', '塞维利亚大教堂 + 吉拉尔达塔', '塞维利亚王宫', '弗拉门戈表演'],
-    food: '塔帕斯、Pescaíto frito（炸海鲜），配 Rebujito（雪利+柠檬苏打）',
-    color: '#C0392B'
+    drive: '科尔多瓦→约 140 km / 1.5h',
+    highlights: ['大教堂与吉拉尔达', '塞维利亚王宫', '圣十字区', '西班牙广场', '黄金塔', '弗拉门戈'],
+    activities: ['5.1 抵达核心地标', '5.2 西班牙广场、玛丽亚路易莎公园、河畔黄昏'],
+    food: '塔帕斯、炸海鲜、Rebujito',
+    color: '#E67E22'
   },
   {
     id: 'ronda',
     cn: '龙达', es: 'Ronda',
     lat: 36.746, lng: -5.162,
     icon: '🌉',
-    days: 'Day 3–4',
+    days: 'Day 7',
     nights: '住宿 1 晚',
-    drive: '约 2.5 小时',
-    highlights: ['龙达新桥（Puente Nuevo）', '峡谷步道', '沿途观景台', '西班牙最古老的斗牛场'],
-    activities: ['沿途停靠观景台', '龙达新桥', '峡谷步道漫步', '老城区探索'],
-    food: 'Rabo de toro（牛尾炖肉）、当地红酒',
+    drive: '约 130 km / 2h',
+    highlights: ['龙达新桥', '峡谷步道', '老城区', '龙达斗牛场（参观）'],
+    activities: ['悬崖山城全天'],
+    food: 'Rabo de toro、本地红酒',
     color: '#8E44AD'
   },
   {
     id: 'olvera',
-    cn: '奥尔韦拉 & 阿尔科斯', es: 'Olvera & Arcos de la Frontera',
+    cn: '奥尔韦拉 & 阿尔科斯', es: 'Olvera & Arcos',
     lat: 36.748, lng: -5.802,
     icon: '🏘️',
-    days: 'Day 4',
-    nights: '住宿 1 晚（阿尔科斯）',
-    drive: '约 2.5 小时（景观慢路）',
-    highlights: ['奥尔韦拉白色村庄', '阿尔科斯悬崖城镇', '安达卢西亚白村群（Pueblos Blancos）'],
-    activities: ['奥尔韦拉停留 1–2 小时', '白色村庄漫步', '下午抵达阿尔科斯', '山顶观景台'],
-    food: '白村特色小吃、橄榄油烹饪',
+    days: 'Day 8',
+    nights: '阿尔科斯 1 晚',
+    drive: '约 100 km / 2.5h',
+    highlights: ['奥尔韦拉白村', '阿尔科斯悬崖小镇'],
+    activities: ['白色小镇之路', '观景台日落'],
+    food: '橄榄油料理、白村小吃',
     color: '#27AE60'
   },
   {
@@ -729,25 +777,38 @@ const CITIES = [
     cn: '加的斯', es: 'Cádiz',
     lat: 36.530, lng: -6.299,
     icon: '🌊',
-    days: 'Day 5–6',
+    days: 'Day 9–10',
     nights: '住宿 2 晚',
-    drive: '约 1.5 小时',
-    highlights: ['欧洲最古老的城市之一', '金色海滩', '赫雷斯酒庄参观', '桑卢卡尔海鲜午餐'],
-    activities: ['赫雷斯酒庄参观（上午）', '桑卢卡尔海鲜午餐', '抵达加的斯', '海滩', '老城区闲逛', '美食主题日'],
-    food: '桑卢卡尔 Manzanilla 雪利酒 + 对虾，加的斯炸鱼（Freidurías）',
+    drive: '赫雷斯—桑卢卡尔—加的斯',
+    highlights: ['赫雷斯雪利酒庄', '桑卢卡尔海鲜', '加的斯老城与海滩', '大教堂'],
+    activities: ['9 日一路南下入住', '10 日海滨慢生活'],
+    food: '雪利酒、炸鱼、对虾',
     color: '#2980B9'
+  },
+  {
+    id: 'gibraltar',
+    cn: '直布罗陀（过境）', es: 'Gibraltar',
+    lat: 36.129, lng: -5.349,
+    icon: '🪨',
+    days: 'Day 11',
+    nights: '车停 La Línea，步行入关',
+    drive: '加的斯→边境约 1h45',
+    highlights: ['巨岩观景台', '欧罗巴角灯塔', '海峡与北非海岸线'],
+    activities: ['申根多次入境英国海外领', '半日打卡后继续塔里法'],
+    food: '英式+海鲜融合',
+    color: '#5D6D7E'
   },
   {
     id: 'tarifa',
     cn: '塔里法', es: 'Tarifa',
     lat: 36.014, lng: -5.605,
     icon: '🌍',
-    days: 'Day 7',
-    nights: '途经',
-    drive: '约 1 小时 45 分',
-    highlights: ['欧洲大陆最南端', '大西洋与地中海交汇', '遥望摩洛哥（仅14公里）', '塔里法角', '兰斯海滩'],
-    activities: ['塔里法角（最标志性地点）', '海峡观景台（日落最佳）', '兰斯海滩漫步', '两海交汇体验', '风筝冲浪观赏'],
-    food: '新鲜海鲜、摩洛哥风味融合料理',
+    days: 'Day 11',
+    nights: '住宿 1 晚',
+    drive: '直布罗陀→约 40 min',
+    highlights: ['塔里法角', '两海交汇', '海峡观景台'],
+    activities: ['欧洲最南端', '风筝冲浪圣地（观赏）'],
+    food: '海鲜、摩洛哥风味',
     color: '#16A085'
   },
   {
@@ -755,221 +816,229 @@ const CITIES = [
     cn: '马拉加', es: 'Málaga',
     lat: 36.721, lng: -4.421,
     icon: '🎨',
-    days: 'Day 8–9',
+    days: 'Day 12–13',
     nights: '住宿 2 晚',
-    drive: '约 2.5 小时',
-    highlights: ['阿尔卡萨瓦城堡', '毕加索博物馆', '地中海海滩', '美食街区 Soho'],
-    activities: ['抵达 + 休息（Day 8）', '马拉加阿尔卡萨瓦城堡（Day 9）', '毕加索博物馆', '海滩休闲'],
-    food: '炸沙丁鱼（Espeto de sardinas）、甜酒（Málaga Dulce）',
+    drive: '塔里法→约 180 km / 2.5h',
+    highlights: ['阿尔卡萨瓦城堡', '毕加索博物馆', '马拉加大教堂', '海滩与港口'],
+    activities: ['12 日抵达', '13 日毕加索故乡+城堡全景'],
+    food: '炸沙丁鱼、Málaga 甜酒',
     color: '#E67E22'
   },
   {
     id: 'granada',
-    cn: '格拉纳达', es: 'Granada',
+    cn: '格拉纳达（路过）', es: 'Granada',
     lat: 37.177, lng: -3.598,
     icon: '🕌',
-    days: 'Day 10',
-    nights: '途经（住科尔多瓦）',
-    drive: '约 1 小时 45 分',
-    highlights: ['阿尔罕布拉宫（需提前订票）', '阿尔拜辛摩尔人老区', '萨克罗蒙特日落观景台', '弗拉门戈洞穴表演'],
-    activities: ['阿尔拜辛区漫步', '萨克罗蒙特日落观景台', '前往科尔多瓦'],
-    food: '塔帕斯免费（Granada传统）、热巧克力配油条',
+    days: 'Day 14',
+    nights: '不停留（赴科尔多瓦）',
+    drive: '马拉加→约 1.5h + 北上',
+    highlights: ['阿尔拜辛区漫步', '远眺阿宫观景台'],
+    activities: ['路过高光机位，不入阿宫深度'],
+    food: '塔帕斯',
     color: '#8E44AD'
-  },
-  {
-    id: 'cordoba',
-    cn: '科尔多瓦', es: 'Córdoba',
-    lat: 37.888, lng: -4.779,
-    icon: '🕍',
-    days: 'Day 10–11',
-    nights: '住宿 2 晚',
-    drive: '约 2 小时 15 分',
-    highlights: ['科尔多瓦清真寺-大教堂（Mezquita-Catedral）', '花巷（Calleja de las Flores）', '罗马桥', '犹太区'],
-    activities: ['科尔多瓦清真寺-大教堂', '花巷漫步', '罗马桥 + 卡拉奥拉塔', '犹太区探索'],
-    food: 'Salmorejo（冷汤）、Flamenquín（炸猪肉卷）',
-    color: '#C0392B'
-  },
-  {
-    id: 'toledo',
-    cn: '托莱多', es: 'Toledo',
-    lat: 39.857, lng: -4.024,
-    icon: '⚔️',
-    days: 'Day 12–13',
-    nights: '住宿 1 晚',
-    drive: '约 3.5 小时',
-    highlights: ['托莱多大教堂', '阿尔卡萨城堡', '老城区（UNESCO遗址）', '俯瞰全城观景台'],
-    activities: ['抵达 + 观景台（Day 12）', '托莱多大教堂（Day 13）', '老城区闲逛', '前往马德里'],
-    food: '马萨潘（Mazapán）杏仁糖、卡斯蒂利亚烤全猪',
-    color: '#D4AC0D'
-  },
-  {
-    id: 'madrid',
-    cn: '马德里', es: 'Madrid',
-    lat: 40.416, lng: -3.703,
-    icon: '🏙️',
-    days: 'Day 13–15',
-    nights: '住宿 2 晚',
-    drive: '约 1 小时',
-    highlights: ['普拉多博物馆', '索菲亚王后国家艺术中心', '太阳门广场', '马约尔广场'],
-    activities: ['城市漫步', '普拉多博物馆 / 索菲亚王后博物馆', '太阳门 + 马约尔广场', '机场还车，返程'],
-    food: '马德里炖肉（Cocido madrileño）、Bocadillo de Calamares（炸鱿鱼三明治）',
-    color: '#2C3E50'
   }
+];
+
+/** 按路书驾车顺序绘制大环线（科尔多瓦出现两次） */
+const ROUTE_COORDS = [
+  [40.416, -3.703],
+  [39.857, -4.024],
+  [37.888, -4.779],
+  [37.389, -5.984],
+  [36.746, -5.162],
+  [36.748, -5.802],
+  [36.530, -6.299],
+  [36.129, -5.349],
+  [36.014, -5.605],
+  [36.721, -4.421],
+  [37.177, -3.598],
+  [37.888, -4.779],
+  [40.471, -3.577]
 ];
 
 const TIMELINE_DAYS = [
   {
     dayLabel: 'Day 1',
-    cityId: 'seville',
-    title: '抵达塞维利亚',
-    subtitle: 'Llegada a Sevilla',
+    dateLabel: '4月27日',
+    cityId: 'madrid',
+    title: '抵达马德里 · 机场取车',
+    subtitle: 'Madrid — Llegada',
     drive: null,
     subdays: [
-      { label: 'Day 1', items: ['抵达塞维利亚，办理入住', '晚上：塔帕斯小吃 + 河边散步', '四月节（Feria de Abril）活动'] }
+      { label: '行程', items: ['马德里机场取车', '入住酒店', '休整安顿（无景点安排）'] }
     ]
   },
   {
     dayLabel: 'Day 2',
-    cityId: 'seville',
-    title: '塞维利亚精华游',
-    subtitle: 'Sevilla — Monumentos',
+    dateLabel: '4月28日',
+    cityId: 'madrid',
+    title: '马德里市区经典',
+    subtitle: 'Madrid — Arte & Centro',
     drive: null,
     subdays: [
-      { label: 'Day 2', items: ['塞维利亚大教堂 + 吉拉尔达塔', '塞维利亚王宫（皇家城堡）', '弗拉门戈表演', '四月节活动'] }
+      { label: '景点', items: ['普拉多博物馆', '马德里王宫', '马约尔广场', '太阳门广场', '丽池公园'] }
     ]
   },
   {
     dayLabel: 'Day 3',
-    cityId: 'ronda',
-    title: '塞维利亚 → 龙达',
-    subtitle: 'Sevilla → Ronda',
-    drive: '约 2.5 小时',
+    dateLabel: '4月29日',
+    cityId: 'toledo',
+    title: '马德里 → 托莱多',
+    subtitle: 'Madrid → Toledo（约 70 km / 1h）',
+    drive: '约 1 小时',
     subdays: [
-      { label: '行程', items: ['租车，开往龙达', '沿途停靠观景台', '龙达新桥', '峡谷步道漫步'] }
+      { label: '托莱多', items: ['观景台俯瞰全城', '托莱多大教堂', '三文化老城', '圣马丁桥'] },
+      { label: '住宿', items: ['灵活二选一：住托莱多 或 直接去科尔多瓦'] }
     ]
   },
   {
     dayLabel: 'Day 4',
-    cityId: 'olvera',
-    title: '龙达 → 白色村庄 → 阿尔科斯',
-    subtitle: 'Ronda → Olvera → Arcos de la Frontera',
-    drive: '约 2.5 小时（景观慢路）',
+    dateLabel: '4月30日',
+    cityId: 'cordoba',
+    title: '科尔多瓦（全日）',
+    subtitle: 'Córdoba',
+    drive: null,
     subdays: [
-      { label: '行程', items: ['奥尔韦拉白色村庄（停留 1–2 小时）', '安达卢西亚白村群漫步', '下午抵达阿尔科斯-德拉弗龙特拉', '山顶观景台日落'] }
+      { label: '景点', items: ['清真寺-大教堂（Mezquita）', '古罗马桥', '百花巷', '老城区漫步'] }
     ]
   },
   {
     dayLabel: 'Day 5',
-    cityId: 'cadiz',
-    title: '阿尔科斯 → 赫雷斯 → 桑卢卡尔 → 加的斯',
-    subtitle: 'Arcos → Jerez → Sanlúcar → Cádiz',
+    dateLabel: '5月1日',
+    cityId: 'seville',
+    title: '科尔多瓦 → 塞维利亚',
+    subtitle: 'Córdoba → Sevilla（约 140 km / 1.5h）',
     drive: '约 1.5 小时',
     subdays: [
-      { label: '上午', items: ['赫雷斯酒庄参观（雪利酒产地）'] },
-      { label: '午餐', items: ['桑卢卡尔-德巴拉梅达（海鲜午餐！）'] },
-      { label: '下午', items: ['抵达加的斯，入住酒店'] }
+      { label: '塞维利亚', items: ['大教堂 + 吉拉尔达', '塞维利亚王宫', '圣十字区', '可选：弗拉门戈之夜（Casa de la Memoria / Tablao 等）'] }
     ]
   },
   {
     dayLabel: 'Day 6',
-    cityId: 'cadiz',
-    title: '加的斯休闲日',
-    subtitle: 'Cádiz — Día libre',
+    dateLabel: '5月2日',
+    cityId: 'seville',
+    title: '塞维利亚（全日）',
+    subtitle: 'Sevilla — Plaza de España',
     drive: null,
     subdays: [
-      { label: '全天', items: ['加的斯金色海滩休闲', '老城区漫步 & 博物馆', '美食主题日：品尝当地特色'] }
+      { label: '景点', items: ['西班牙广场', '玛丽亚路易莎公园', '黄金塔', '瓜达尔基维尔河畔黄昏', '可选：弗拉门戈博物馆庭院场'] }
     ]
   },
   {
     dayLabel: 'Day 7',
-    cityId: 'tarifa',
-    title: '加的斯 → 塔里法',
-    subtitle: 'Cádiz → Tarifa',
-    drive: '约 1 小时 45 分',
+    dateLabel: '5月3日',
+    cityId: 'ronda',
+    title: '塞维利亚 → 龙达',
+    subtitle: 'Sevilla → Ronda（约 130 km / 2h）',
+    drive: '约 2 小时',
     subdays: [
-      { label: '亮点', items: ['欧洲大陆最南端', '大西洋与地中海交汇处', '天气晴朗时可望见摩洛哥（仅 14 公里）', '塔里法角 — 最标志性地点', '海峡观景台（日落绝佳）', '兰斯海滩 — 风筝冲浪圣地'] }
+      { label: '龙达', items: ['龙达新桥', '峡谷步道', '老城区', '斗牛场参观（5 月无赛事可逛博物馆）'] }
     ]
   },
   {
     dayLabel: 'Day 8',
-    cityId: 'malaga',
-    title: '塔里法 → 马拉加',
-    subtitle: 'Tarifa → Málaga',
+    dateLabel: '5月4日',
+    cityId: 'olvera',
+    title: '龙达 → 奥尔韦拉 → 阿尔科斯',
+    subtitle: 'Ronda → Olvera → Arcos（约 100 km / 2.5h）',
     drive: '约 2.5 小时',
     subdays: [
-      { label: 'Day 8', items: ['抵达马拉加', '休息 + 海滨漫步'] }
+      { label: '白村之路', items: ['奥尔韦拉城堡与小镇', '阿尔科斯悬崖小镇', '观景台日落'] }
     ]
   },
   {
     dayLabel: 'Day 9',
-    cityId: 'malaga',
-    title: '马拉加精华游',
-    subtitle: 'Málaga — Monumentos',
-    drive: null,
+    dateLabel: '5月5日',
+    cityId: 'cadiz',
+    title: '阿尔科斯 → 赫雷斯 → 桑卢卡尔 → 加的斯',
+    subtitle: 'Jerez → Sanlúcar → Cádiz（约 80 km / 1.5h）',
+    drive: '约 1.5 小时',
     subdays: [
-      { label: 'Day 9', items: ['马拉加阿尔卡萨瓦城堡', '毕加索博物馆（Pablo Picasso 故乡）', '地中海海滩休闲'] }
+      { label: '一路向南', items: ['赫雷斯雪利酒庄', '桑卢卡尔海鲜午餐', '抵达加的斯入住'] }
     ]
   },
   {
     dayLabel: 'Day 10',
-    cityId: 'granada',
-    title: '马拉加 → 格拉纳达 → 科尔多瓦',
-    subtitle: 'Málaga → Granada → Córdoba',
-    drive: '格拉纳达 1h45 + 科尔多瓦 2h15',
+    dateLabel: '5月6日',
+    cityId: 'cadiz',
+    title: '加的斯（休闲日）',
+    subtitle: 'Cádiz — Playa & Casco',
+    drive: null,
     subdays: [
-      { label: '格拉纳达', items: ['阿尔拜辛摩尔人老区漫步', '萨克罗蒙特日落观景台'] },
-      { label: '晚间', items: ['驾车至科尔多瓦（约 2 小时 15 分）', '抵达科尔多瓦入住'] }
+      { label: '海滨慢旅行', items: ['城市海滩', '加的斯大教堂', '老城区彩色街巷与市集'] }
     ]
   },
   {
     dayLabel: 'Day 11',
-    cityId: 'cordoba',
-    title: '科尔多瓦',
-    subtitle: 'Córdoba',
-    drive: null,
+    dateLabel: '5月7日',
+    cityId: 'tarifa',
+    nightsNote: '直布罗陀过境后宿塔里法',
+    title: '加的斯 → 直布罗陀 → 塔里法',
+    subtitle: 'Cádiz → Gibraltar → Tarifa',
+    drive: '加的斯→边境约 1h45 + 塔里法约 40m',
     subdays: [
-      { label: '全天', items: ['科尔多瓦清真寺-大教堂（Mezquita-Catedral）', '花巷（Calleja de las Flores）', '罗马桥 & 卡拉奥拉塔', '犹太区漫步'] }
+      { label: '直布罗陀（半日）', items: ['车停 La Línea 步行入关', '巨岩观景台、欧罗巴角', '中国护照 + 多次申根可入境（英属海外领土）'] },
+      { label: '塔里法', items: ['塔里法角、海峡观景台', '当晚住塔里法'] }
     ]
   },
   {
     dayLabel: 'Day 12',
-    cityId: 'toledo',
-    title: '科尔多瓦 → 托莱多',
-    subtitle: 'Córdoba → Toledo',
-    drive: '约 3.5 小时',
+    dateLabel: '5月8日',
+    cityId: 'malaga',
+    title: '塔里法 → 马拉加',
+    subtitle: 'Tarifa → Málaga（约 180 km / 2.5h）',
+    drive: '约 2.5 小时',
     subdays: [
-      { label: '行程', items: ['驾车前往托莱多', '抵达 + 俯瞰全城观景台', '老城区初探'] }
+      { label: '抵达', items: ['马拉加港口与海滩', '老城区初探'] }
     ]
   },
   {
     dayLabel: 'Day 13',
-    cityId: 'madrid',
-    title: '托莱多 → 马德里',
-    subtitle: 'Toledo → Madrid',
-    drive: '约 1 小时',
+    dateLabel: '5月9日',
+    cityId: 'malaga',
+    title: '马拉加（全日）',
+    subtitle: 'Málaga — Picasso & Alcazaba',
+    drive: null,
     subdays: [
-      { label: '上午 / 托莱多', items: ['托莱多大教堂（哥特式经典）', '老城区 & 阿尔卡萨城堡'] },
-      { label: '下午 / 马德里', items: ['抵达马德里，入住酒店', '太阳门广场初探'] }
+      { label: '景点', items: ['阿尔卡萨瓦城堡', '毕加索博物馆', '马拉加大教堂', '老城与市场'] }
     ]
   },
   {
     dayLabel: 'Day 14',
-    cityId: 'madrid',
-    title: '马德里漫游',
-    subtitle: 'Madrid — Museos y Ciudad',
-    drive: null,
+    dateLabel: '5月10日',
+    cityId: 'granada',
+    nightsNote: '晚间第二次入住科尔多瓦',
+    title: '马拉加 → 格拉纳达（路过）→ 科尔多瓦',
+    subtitle: 'Málaga → Granada → Córdoba（全程约 4h+）',
+    drive: '分段驾驶',
     subdays: [
-      { label: '全天', items: ['普拉多博物馆（Goya、Velázquez）', '索菲亚王后国家艺术中心（Picasso《格尔尼卡》）', '太阳门 + 马约尔广场', '城市漫步 & 购物'] }
+      { label: '格拉纳达（外观）', items: ['阿尔拜辛区漫步', '远眺阿宫观景台（不入宫深度）'] },
+      { label: '晚间', items: ['驱车抵达科尔多瓦入住'] }
     ]
   },
   {
     dayLabel: 'Day 15',
+    dateLabel: '5月11日',
+    cityId: 'cordoba',
+    nightsNote: '晚间马德里机场还车 · 住机场酒店',
+    title: '科尔多瓦 → 马德里机场',
+    subtitle: 'Córdoba → Madrid Airport（约 400 km / 4h）',
+    drive: '约 4 小时',
+    subdays: [
+      { label: '上午（科尔多瓦可选）', items: ['基督教国王城堡', '犹太区', '瓜达尔基维尔河滨'] },
+      { label: '下午至晚间', items: ['驱车前往马德里机场', '还车', '入住机场酒店'] },
+      { label: '可选', items: ['Las Ventas 斗牛季（5 月）', '伯纳乌球迷店（无主场比赛日可逛店）'] }
+    ]
+  },
+  {
+    dayLabel: 'Day 16',
+    dateLabel: '5月12日',
     cityId: 'madrid',
-    title: '返程',
-    subtitle: 'Regreso',
+    title: '马德里机场 · 早班机返程',
+    subtitle: 'MAD — Salida',
     drive: null,
     subdays: [
-      { label: '离程', items: ['最后一顿马德里早餐', '机场还车', '返程离开西班牙'] }
+      { label: '离境', items: ['早班机登机，行程结束'] }
     ]
   }
 ];
@@ -986,9 +1055,8 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// Draw route polyline
-const routeCoords = CITIES.map(c => [c.lat, c.lng]);
-const routeLine = L.polyline(routeCoords, {
+// Draw route polyline（路书驾车顺序，含重复经停点）
+const routeLine = L.polyline(ROUTE_COORDS, {
   color: '#D4622A',
   weight: 3,
   opacity: 0.65,
@@ -1018,7 +1086,7 @@ CITIES.forEach((city, idx) => {
 
   const marker = L.marker([city.lat, city.lng], { icon })
     .addTo(map)
-    .on('click', () => openCityPanel(city));
+    .on('click', () => openCityPanel(city, false));
 
   markers[city.id] = marker;
 });
@@ -1031,7 +1099,7 @@ document.getElementById('panel-close').addEventListener('click', () => {
   cityPanel.classList.remove('active');
 });
 
-function openCityPanel(city) {
+function openCityPanel(city, syncTimeline = true) {
   document.getElementById('panel-cn').textContent = city.cn;
   document.getElementById('panel-es').textContent = city.es;
   document.getElementById('panel-days').textContent = city.days;
@@ -1043,8 +1111,7 @@ function openCityPanel(city) {
   cityPanel.classList.add('active');
   map.flyTo([city.lat, city.lng], 10, { duration: 1.2 });
 
-  // Scroll to and open matching timeline card
-  scrollToTimelineCity(city.id);
+  if (syncTimeline) scrollToTimelineCity(city.id);
 }
 
 // ─────────────────────────────────────────────
@@ -1059,9 +1126,15 @@ TIMELINE_DAYS.forEach((day, idx) => {
   item.dataset.idx = idx;
 
   const city = CITIES.find(c => c.id === day.cityId);
-  const driveHtml = day.drive
-    ? `<div class="tl-drive"><span class="drive-icon">🚗</span><span>驾车</span><span class="drive-time">${day.drive}</span></div>`
-    : '';
+  let driveHtml = '';
+  if (day.train) {
+    driveHtml = `<div class="tl-drive"><span class="drive-icon">🚆</span><span>火车</span><span class="drive-time">${day.train}</span></div>`;
+  } else if (day.drive) {
+    driveHtml = `<div class="tl-drive"><span class="drive-icon">🚗</span><span>驾车</span><span class="drive-time">${day.drive}</span></div>`;
+  }
+  const badgeText = day.dateLabel
+    ? `${day.dayLabel}<span class="tl-date-line">${day.dateLabel}</span>`
+    : day.dayLabel;
 
   const bodyHtml = day.subdays.map(sd => `
     <div class="tl-subday">${sd.label}</div>
@@ -1075,7 +1148,7 @@ TIMELINE_DAYS.forEach((day, idx) => {
     <div class="tl-card">
       ${driveHtml}
       <div class="tl-card-header">
-        <div class="tl-day-badge">${day.dayLabel}</div>
+        <div class="tl-day-badge">${badgeText}</div>
         <div class="tl-city-info">
           <div class="tl-city-cn">${day.title}</div>
           <div class="tl-city-es">${day.subtitle}</div>
@@ -1084,7 +1157,7 @@ TIMELINE_DAYS.forEach((day, idx) => {
       </div>
       <div class="tl-card-body">
         ${bodyHtml}
-        <div class="tl-nights-badge">🏨 ${city ? city.nights : ''}</div>
+        <div class="tl-nights-badge">🏨 ${day.nightsNote || (city ? city.nights : '')}</div>
       </div>
     </div>
   `;
