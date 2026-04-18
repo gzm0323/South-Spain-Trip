@@ -572,6 +572,10 @@
       font-weight: 700;
       color: #fff;
     }
+    .map-marker span.digits-2 {
+      font-size: .5rem;
+      letter-spacing: -0.04em;
+    }
     .map-marker.active { transform: rotate(-45deg) scale(1.3); }
 
     /* ─── ANIMATIONS ─── */
@@ -693,7 +697,6 @@
 // ─────────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────────
-/** 城市顺序 = 驾车环线先后（地图标记 1…N 与城市卡片顺序与此一致；科尔多瓦仅一个锚点） */
 const CITIES = [
   {
     id: 'madrid',
@@ -839,6 +842,22 @@ const CITIES = [
     color: '#D4AC0D'
   }
 ];
+
+/**
+ * 驾车环线途经城市的先后顺序（与 ROUTE_COORDS 中各城首次出现顺序一致）。
+ * 地图标记序号、城市卡片顺序均只依据此列表，不依赖 CITIES 数组字面量顺序。
+ */
+const MAP_CITY_ORDER = [
+  'madrid', 'cordoba', 'granada', 'malaga', 'gibraltar', 'tarifa', 'cadiz', 'olvera', 'ronda', 'seville', 'toledo'
+];
+
+function citiesInMapOrder() {
+  return MAP_CITY_ORDER.map(id => {
+    const c = CITIES.find(x => x.id === id);
+    if (!c) console.error('MAP_CITY_ORDER missing city:', id);
+    return c;
+  }).filter(Boolean);
+}
 
 /** 按路书驾车顺序绘制大环线（逆时针 / 与原路线相反；科尔多瓦两次） */
 const ROUTE_COORDS = [
@@ -1076,11 +1095,14 @@ map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
 const markers = {};
 let activeMarker = null;
 
-CITIES.forEach((city, idx) => {
+citiesInMapOrder().forEach((city, idx) => {
   const el = document.createElement('div');
   el.className = 'map-marker';
   el.style.background = city.color;
-  el.innerHTML = `<span>${idx + 1}</span>`;
+  const n = idx + 1;
+  el.innerHTML = n >= 10
+    ? `<span class="digits-2">${n}</span>`
+    : `<span>${n}</span>`;
 
   const icon = L.divIcon({
     className: '',
@@ -1196,7 +1218,7 @@ function scrollToTimelineCity(cityId) {
 // ─────────────────────────────────────────────
 const citiesGrid = document.getElementById('cities-grid');
 
-CITIES.forEach(city => {
+citiesInMapOrder().forEach(city => {
   const card = document.createElement('div');
   card.className = 'city-card';
   card.innerHTML = `
