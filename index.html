@@ -693,6 +693,7 @@
 // ─────────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────────
+/** 城市顺序 = 驾车环线先后（地图标记 1…N 与城市卡片顺序与此一致；科尔多瓦仅一个锚点） */
 const CITIES = [
   {
     id: 'madrid',
@@ -708,19 +709,6 @@ const CITIES = [
     color: '#2C3E50'
   },
   {
-    id: 'toledo',
-    cn: '托莱多', es: 'Toledo',
-    lat: 39.857, lng: -4.024,
-    icon: '⚔️',
-    days: 'Day 14',
-    nights: '古城 1 晚',
-    drive: '科尔多瓦→约 340 km / 3.5h',
-    highlights: ['托莱多观景台', '托莱多大教堂', '三文化老城', '圣马丁桥'],
-    activities: ['5.10 科尔多瓦 → 托莱多', '古城与教堂深度游览'],
-    food: '马萨潘（Mazapán）、烤乳猪',
-    color: '#D4AC0D'
-  },
-  {
     id: 'cordoba',
     cn: '科尔多瓦', es: 'Córdoba',
     lat: 37.888, lng: -4.779,
@@ -734,56 +722,30 @@ const CITIES = [
     color: '#C0392B'
   },
   {
-    id: 'seville',
-    cn: '塞维利亚', es: 'Sevilla',
-    lat: 37.389, lng: -5.984,
-    icon: '🏛️',
-    days: 'Day 10–12',
-    nights: '住宿 3 晚（5.6–5.8）',
-    drive: '龙达→约 130 km / 2h',
-    highlights: ['大教堂与吉拉尔达', '塞维利亚王宫', '圣十字区', '西班牙广场', '黄金塔', '弗拉门戈'],
-    activities: ['5.6 傍晚抵达', '5.7 大教堂/王宫/圣十字区', '5.8 西班牙广场、玛丽亚路易莎公园'],
-    food: '塔帕斯、炸海鲜、Rebujito',
-    color: '#E67E22'
-  },
-  {
-    id: 'ronda',
-    cn: '龙达', es: 'Ronda',
-    lat: 36.746, lng: -5.162,
-    icon: '🌉',
-    days: 'Day 9',
-    nights: '住宿 1 晚',
-    drive: '阿尔科斯→约 1.5h',
-    highlights: ['龙达新桥', '峡谷步道', '老城区', '龙达斗牛场（参观）'],
-    activities: ['5.5 悬崖山城全天'],
-    food: 'Rabo de toro、本地红酒',
+    id: 'granada',
+    cn: '格拉纳达', es: 'Granada',
+    lat: 37.177, lng: -3.598,
+    icon: '🕌',
+    days: 'Day 4',
+    nights: '不住宿（晚间赴马拉加）',
+    drive: '科尔多瓦→约 2h',
+    highlights: ['阿尔罕布拉宫（需预约）', '阿尔拜辛区', '圣尼古拉斯观景台'],
+    activities: ['4.30 全日游览', '晚间驱车至马拉加入住'],
+    food: '塔帕斯、阿拉伯甜品',
     color: '#8E44AD'
   },
   {
-    id: 'olvera',
-    cn: '奥尔韦拉 & 阿尔科斯', es: 'Olvera & Arcos',
-    lat: 36.748, lng: -5.802,
-    icon: '🏘️',
-    days: 'Day 8',
-    nights: '阿尔科斯 1 晚',
-    drive: '约 100 km / 2.5h',
-    highlights: ['奥尔韦拉白村', '阿尔科斯悬崖小镇'],
-    activities: ['5.4 白色小镇之路', '观景台日落'],
-    food: '橄榄油料理、白村小吃',
-    color: '#27AE60'
-  },
-  {
-    id: 'cadiz',
-    cn: '加的斯', es: 'Cádiz',
-    lat: 36.530, lng: -6.299,
-    icon: '🌊',
-    days: 'Day 7',
-    nights: '住宿 1 晚',
-    drive: '塔里法→加的斯沿岸',
-    highlights: ['赫雷斯雪利酒庄', '桑卢卡尔海鲜', '加的斯老城与海滩', '大教堂'],
-    activities: ['5.3 赫雷斯—桑卢卡尔—加的斯'],
-    food: '雪利酒、炸鱼、对虾',
-    color: '#2980B9'
+    id: 'malaga',
+    cn: '马拉加', es: 'Málaga',
+    lat: 36.721, lng: -4.421,
+    icon: '🎨',
+    days: 'Day 4–5',
+    nights: '4.30 晚起 · 住宿 2 晚',
+    drive: '格拉纳达→约 1.5h',
+    highlights: ['阿尔卡萨瓦城堡', '毕加索博物馆', '马拉加大教堂', '海滩与港口'],
+    activities: ['4.30 晚间抵达马拉加', '5.1 老城与博物馆全日'],
+    food: '炸沙丁鱼、Málaga 甜酒',
+    color: '#E67E22'
   },
   {
     id: 'gibraltar',
@@ -812,30 +774,69 @@ const CITIES = [
     color: '#16A085'
   },
   {
-    id: 'malaga',
-    cn: '马拉加', es: 'Málaga',
-    lat: 36.721, lng: -4.421,
-    icon: '🎨',
-    days: 'Day 4–5',
-    nights: '4.30 晚起 · 住宿 2 晚',
-    drive: '格拉纳达→约 1.5h',
-    highlights: ['阿尔卡萨瓦城堡', '毕加索博物馆', '马拉加大教堂', '海滩与港口'],
-    activities: ['4.30 晚间抵达马拉加', '5.1 老城与博物馆全日'],
-    food: '炸沙丁鱼、Málaga 甜酒',
+    id: 'cadiz',
+    cn: '加的斯', es: 'Cádiz',
+    lat: 36.530, lng: -6.299,
+    icon: '🌊',
+    days: 'Day 7',
+    nights: '住宿 1 晚',
+    drive: '塔里法→加的斯沿岸',
+    highlights: ['赫雷斯雪利酒庄', '桑卢卡尔海鲜', '加的斯老城与海滩', '大教堂'],
+    activities: ['5.3 赫雷斯—桑卢卡尔—加的斯'],
+    food: '雪利酒、炸鱼、对虾',
+    color: '#2980B9'
+  },
+  {
+    id: 'olvera',
+    cn: '奥尔韦拉 & 阿尔科斯', es: 'Olvera & Arcos',
+    lat: 36.748, lng: -5.802,
+    icon: '🏘️',
+    days: 'Day 8',
+    nights: '阿尔科斯 1 晚',
+    drive: '约 100 km / 2.5h',
+    highlights: ['奥尔韦拉白村', '阿尔科斯悬崖小镇'],
+    activities: ['5.4 白色小镇之路', '观景台日落'],
+    food: '橄榄油料理、白村小吃',
+    color: '#27AE60'
+  },
+  {
+    id: 'ronda',
+    cn: '龙达', es: 'Ronda',
+    lat: 36.746, lng: -5.162,
+    icon: '🌉',
+    days: 'Day 9',
+    nights: '住宿 1 晚',
+    drive: '阿尔科斯→约 1.5h',
+    highlights: ['龙达新桥', '峡谷步道', '老城区', '龙达斗牛场（参观）'],
+    activities: ['5.5 悬崖山城全天'],
+    food: 'Rabo de toro、本地红酒',
+    color: '#8E44AD'
+  },
+  {
+    id: 'seville',
+    cn: '塞维利亚', es: 'Sevilla',
+    lat: 37.389, lng: -5.984,
+    icon: '🏛️',
+    days: 'Day 10–12',
+    nights: '住宿 3 晚（5.6–5.8）',
+    drive: '龙达→约 130 km / 2h',
+    highlights: ['大教堂与吉拉尔达', '塞维利亚王宫', '圣十字区', '西班牙广场', '黄金塔', '弗拉门戈'],
+    activities: ['5.6 傍晚抵达', '5.7 大教堂/王宫/圣十字区', '5.8 西班牙广场、玛丽亚路易莎公园'],
+    food: '塔帕斯、炸海鲜、Rebujito',
     color: '#E67E22'
   },
   {
-    id: 'granada',
-    cn: '格拉纳达', es: 'Granada',
-    lat: 37.177, lng: -3.598,
-    icon: '🕌',
-    days: 'Day 4',
-    nights: '不住宿（晚间赴马拉加）',
-    drive: '科尔多瓦→约 2h',
-    highlights: ['阿尔罕布拉宫（需预约）', '阿尔拜辛区', '圣尼古拉斯观景台'],
-    activities: ['4.30 全日游览', '晚间驱车至马拉加入住'],
-    food: '塔帕斯、阿拉伯甜品',
-    color: '#8E44AD'
+    id: 'toledo',
+    cn: '托莱多', es: 'Toledo',
+    lat: 39.857, lng: -4.024,
+    icon: '⚔️',
+    days: 'Day 14',
+    nights: '古城 1 晚',
+    drive: '科尔多瓦→约 340 km / 3.5h',
+    highlights: ['托莱多观景台', '托莱多大教堂', '三文化老城', '圣马丁桥'],
+    activities: ['5.10 科尔多瓦 → 托莱多', '古城与教堂深度游览'],
+    food: '马萨潘（Mazapán）、烤乳猪',
+    color: '#D4AC0D'
   }
 ];
 
@@ -845,8 +846,8 @@ const ROUTE_COORDS = [
   [37.888, -4.779],
   [37.177, -3.598],
   [36.721, -4.421],
-  [36.014, -5.605],
   [36.129, -5.349],
+  [36.014, -5.605],
   [36.530, -6.299],
   [36.748, -5.802],
   [36.746, -5.162],
