@@ -707,7 +707,7 @@ const CITIES = [
     nights: '机场附近住宿（4.27–4.28）',
     drive: null,
     highlights: ['普拉多博物馆', '马德里王宫', '马约尔广场', '太阳门广场', '丽池公园', '伯纳乌球场/俱乐部参观（如开放）', '圣米格尔市场（美食）', 'Las Ventas（可选）'],
-    activities: ['4.27 抵达', '4.28 市区全日', '5.11 托莱多 → 马德里机场还车', '5.12 早班机离境'],
+    activities: ['4.27 抵达', '4.28 丽池—普拉多（12:45）—西贝莱斯/阿尔卡拉街—太阳门/马约尔—圣米格尔 & San Ginés', '5.11 托莱多 → 马德里机场还车', '5.12 早班机离境'],
     food: '马德里炖肉（Cocido madrileño）、炸鱿鱼三明治（Bocadillo de Calamares）',
     color: '#2C3E50'
   },
@@ -893,12 +893,44 @@ const TIMELINE_DAYS = [
     dateLabel: '4月28日（周二）',
     cityId: 'madrid',
     title: '马德里（全日）',
-    subtitle: 'Madrid — Centro & Museo',
+    subtitle: 'Madrid — Parque del Prado & Centro',
     drive: null,
     subdays: [
-      { label: '上午（公园与地标）', items: ['丽池公园（玻璃宫/湖区）', '阿尔卡拉门（Puerta de Alcalá）'] },
-      { label: '下午（老城动线）', items: ['太阳门广场', '马约尔广场', '圣米格尔市场（Tapas）'] },
-      { label: '18:00–20:00（艺术）', items: ['普拉多博物馆（建议提前订票/选重点馆藏）'] }
+      {
+        label: '09:30 – 11:30｜丽池公园漫步',
+        items: [
+          '从北门（阿波罗喷泉附近）入园，一路向南行至玻璃宫（Palacio de Cristal）',
+          '上午光线透过玻璃宫很适合拍照'
+        ]
+      },
+      {
+        label: '11:30 – 12:30｜博物馆区午餐',
+        items: [
+          '普拉多博物馆后方的 Jerónimos 区：露台咖啡厅与精致餐厅较多',
+          '环境比太阳门一带安静，适合 sit-down 午餐'
+        ]
+      },
+      {
+        label: '12:45 – 16:30｜普拉多博物馆：艺术沉浸',
+        items: [
+          '凭 12:45 时段门票入场（请提前官网订票）',
+          '策略：午间前后人流相对缓和，可从 0 层博斯《人间乐园》起步，再上楼看委拉斯开兹等名作'
+        ]
+      },
+      {
+        label: '16:30 – 19:00｜城市中轴线漫步',
+        items: [
+          '出馆后沿普拉多大道（Paseo del Prado）向北',
+          '经西贝莱斯广场（Cibeles），再沿阿尔卡拉街（Calle de Alcalá）步行至太阳门广场与马约尔广场'
+        ]
+      },
+      {
+        label: '19:00 以后｜圣米格尔市场 & 甜点',
+        items: [
+          '圣米格尔市场开启 Tapas 之夜',
+          '必试：马约尔广场步行可至的 San Ginés 巧克力油条（churros）'
+        ]
+      }
     ]
   },
   {
